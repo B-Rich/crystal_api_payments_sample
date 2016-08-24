@@ -34,6 +34,7 @@ describe CrystalApiPaymentsSample do
       puts "User already available"
       puts collection.inspect
     end
+    user1_id = collection[0].id
 
     # create user 2
     h = {"email" => sample_user2_email}
@@ -57,7 +58,34 @@ describe CrystalApiPaymentsSample do
       puts "User already available"
       puts collection.inspect
     end
+    user2_id = collection[0].id
 
+
+    # create initial payments
+    h = {
+      "user_id"           => user1_id,
+      "amount"          => 1000,
+      "payment_type" => Payment::TYPE_INCOMING
+    }
+    result = service.insert_object("payments", h)
+
+    h = {
+      "user_id"           => user1_id,
+      "destination_user_id" => user2_id,
+      "amount"          => 500,
+      "payment_type" => Payment::TYPE_TRANSFER
+    }
+    result = service.insert_object("payments", h)
+
+    h = {
+      "user_id"           => user2_id,
+      "amount"          => 200,
+      "payment_type" => Payment::TYPE_OUTGOING
+    }
+    result = service.insert_object("payments", h)
+
+
+    # run server
     puts "Run kemal"
 
     spawn do
@@ -92,5 +120,13 @@ describe CrystalApiPaymentsSample do
     json = JSON.parse(result.body)
     json["email"].should eq sample_user1_email
     json["handle"].should eq sample_user1_handle
+
+    # get user balance
+    http = HTTP::Client.new("localhost", Kemal.config.port)
+    result = http.exec("GET", "/balance", headers)
+    puts result.body
+
+    # json = JSON.parse(result.body)
+    # puts json.inspect
   end
 end

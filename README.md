@@ -2,17 +2,16 @@
 
 TODO
 
-[x] DB access
-[x] Real life sign in using DB
-[ ] Incoming payment class
-[ ] Outgoing payment class
-[ ] Transfer payment class
-[ ] User balance method
-[ ] Internal incoming/outgoing payment method
-[ ] External (any user can) transfer endpoint which checks balance and create
-    instance
-[ ] Reports endpoint
-[ ] Sample JS/react application
+- [x] DB access
+- [x] Real life sign in using DB
+- [ ] Incoming payment class
+- [ ] Outgoing payment class
+- [ ] Transfer payment class
+- [x] User balance method
+- [ ] Internal incoming/outgoing payment method
+- [ ] External (any user can) transfer endpoint which checks   balance and create instance
+- [ ] Reports endpoint
+- [ ] Sample JS/react application
 
 ## Notes
 
@@ -22,7 +21,7 @@ TODO
 
 ## Purpose
 
-Create proof that it is possible to create very fast API in Crystal language. 
+Create proof that it is possible to create very fast API in Crystal language.
 
 ## Contributing
 
