@@ -12,12 +12,12 @@ path = local_path if File.exists?(local_path)
 pg_connect_from_yaml(path)
 
 # initialize models
-crystal_model(Payment, id : (Int32 | Nil) = nil, amount : (Int32 | Nil) = nil, created_at : (Time | Nil) = Time.now )
+crystal_model(Payment, id : (Int32 | Nil) = nil, amount : (Int32 | Nil) = nil, created_at : (Time | Nil) = Time.now)
 crystal_resource_convert(payment, Payment)
 crystal_resource_migrate(payment, payments, Payment)
 crystal_migrate_payment
 
-crystal_model(User, id : (Int32 | Nil) = nil, email : (String | Nil) = nil, hashed_password : (String | Nil) = nil, handle : (String | Nil) = nil )
+crystal_model(User, id : (Int32 | Nil) = nil, email : (String | Nil) = nil, hashed_password : (String | Nil) = nil, handle : (String | Nil) = nil)
 crystal_resource_convert(user, User)
 crystal_resource_migrate(user, users, User)
 crystal_migrate_user
@@ -27,8 +27,8 @@ struct User
   def self.sign_in(email : String, password : String) : UserHash
     service = CrystalService.instance
     h = {
-      "email" => email,
-      "hashed_password" => Crypto::MD5.hex_digest(password)
+      "email"           => email,
+      "hashed_password" => Crypto::MD5.hex_digest(password),
     }
     result = service.get_filtered_objects("users", h)
     collection = crystal_resource_convert_user(result)
@@ -36,8 +36,8 @@ struct User
     # try sign in using handle
     if collection.size == 0
       h = {
-        "handle" => email,
-        "hashed_password" => Crypto::MD5.hex_digest(password)
+        "handle"          => email,
+        "hashed_password" => Crypto::MD5.hex_digest(password),
       }
       result = service.get_filtered_objects("users", h)
       collection = crystal_resource_convert_user(result)
@@ -48,7 +48,6 @@ struct User
       uh["id"] = collection[0].id
     end
     return uh
-
   end
 
   # Return email and handle if user can be loaded
@@ -58,7 +57,7 @@ struct User
 
     service = CrystalService.instance
     h = {
-      "id" => user["id"].to_s.to_i as Int32
+      "id" => user["id"].to_s.to_i.as(Int32),
     }
     result = service.get_filtered_objects("users", h)
     collection = crystal_resource_convert_user(result)

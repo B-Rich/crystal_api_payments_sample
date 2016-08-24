@@ -1,10 +1,5 @@
 require "./spec_helper"
 
-
-
-
-
-
 describe CrystalApiPaymentsSample do
   it "run server" do
     sample_user1_email = "email1@email.org"
@@ -26,10 +21,10 @@ describe CrystalApiPaymentsSample do
       puts "Create user #{sample_user1_email}"
 
       h = {
-        "email" => sample_user1_email,
-         "handle" => sample_user1_handle,
-         "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password)
-       }
+        "email"           => sample_user1_email,
+        "handle"          => sample_user1_handle,
+        "hashed_password" => Crypto::MD5.hex_digest(sample_user1_password),
+      }
       result = service.insert_object("users", h)
       collection = crystal_resource_convert_user(result)
 
@@ -49,10 +44,10 @@ describe CrystalApiPaymentsSample do
       puts "Create user #{sample_user2_email}"
 
       h = {
-        "email" => sample_user2_email,
-         "handle" => sample_user2_handle,
-         "hashed_password" => Crypto::MD5.hex_digest(sample_user2_password)
-       }
+        "email"           => sample_user2_email,
+        "handle"          => sample_user2_handle,
+        "hashed_password" => Crypto::MD5.hex_digest(sample_user2_password),
+      }
       result = service.insert_object("users", h)
       collection = crystal_resource_convert_user(result)
 
@@ -62,7 +57,6 @@ describe CrystalApiPaymentsSample do
       puts "User already available"
       puts collection.inspect
     end
-
 
     puts "Run kemal"
 
@@ -77,10 +71,9 @@ describe CrystalApiPaymentsSample do
 
     puts "Kemal is ready"
 
-
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)
-    result = http.post_form("/sign_in", {"email" => sample_user1_email, "password" => sample_user1_password })
+    result = http.post_form("/sign_in", {"email" => sample_user1_email, "password" => sample_user1_password})
     json = JSON.parse(result.body)
     token = json["token"].to_s
 
@@ -99,7 +92,5 @@ describe CrystalApiPaymentsSample do
     json = JSON.parse(result.body)
     json["email"].should eq sample_user1_email
     json["handle"].should eq sample_user1_handle
-
-
   end
 end
