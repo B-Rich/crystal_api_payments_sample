@@ -1,0 +1,5 @@
+/doc/
+/libs/
+/.crystal/
+/.shards/
+config/database.yml

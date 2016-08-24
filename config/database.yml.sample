@@ -1,0 +1,4 @@
+host: localhost
+database: crystal_api_payments
+user: crystal_user
+password: crystal_password
