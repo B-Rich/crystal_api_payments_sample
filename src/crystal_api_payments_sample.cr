@@ -1,4 +1,5 @@
 require "crystal_api"
+require "kemal-auth-token/kemal-auth"
 
 # blank module for spec
 module CrystalApiPaymentsSample
@@ -22,13 +23,65 @@ crystal_resource_migrate(user, users, User)
 crystal_migrate_user
 
 struct User
+  # Return id in UserHash if user is signed ok
   def self.sign_in(email : String, password : String) : UserHash
-    h = UserHash.new
-    return h
+    service = CrystalService.instance
+    h = {
+      "email" => email,
+      "hashed_password" => Crypto::MD5.hex_digest(password)
+    }
+    result = service.get_filtered_objects("users", h)
+    collection = crystal_resource_convert_user(result)
+
+    # try sign in using handle
+    if collection.size == 0
+      h = {
+        "handle" => email,
+        "hashed_password" => Crypto::MD5.hex_digest(password)
+      }
+      result = service.get_filtered_objects("users", h)
+      collection = crystal_resource_convert_user(result)
+    end
+
+    uh = UserHash.new
+    if collection.size > 0
+      uh["id"] = collection[0].id
+    end
+    return uh
+
   end
 
+  # Return email and handle if user can be loaded
   def self.load_user(user : Hash) : UserHash
-    h = UserHash.new
-    return h
+    uh = UserHash.new
+    return uh if user["id"].to_s == ""
+
+    service = CrystalService.instance
+    h = {
+      "id" => user["id"].to_s.to_i as Int32
+    }
+    result = service.get_filtered_objects("users", h)
+    collection = crystal_resource_convert_user(result)
+
+    if collection.size > 0
+      uh["email"] = collection[0].email
+      uh["handle"] = collection[0].handle
+    end
+    return uh
   end
+end
+
+auth_token_mw = Kemal::AuthToken.new
+auth_token_mw.sign_in do |email, password|
+  User.sign_in(email, password)
+end
+auth_token_mw.load_user do |user|
+  User.load_user(user)
+end
+
+Kemal.config.add_handler(auth_token_mw)
+Kemal.config.port = 8002
+
+get "/current_user" do |env|
+  env.current_user.to_json
 end
