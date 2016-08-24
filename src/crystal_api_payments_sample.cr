@@ -1,5 +1,4 @@
 require "crystal_api"
-require "kemal-auth-token/kemal-auth"
 
 # blank module for spec
 module CrystalApiPaymentsSample

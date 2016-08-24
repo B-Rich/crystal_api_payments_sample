@@ -1,33 +1,28 @@
 # crystal_api_payments_sample
 
-TODO:
+TODO
 
-1. Add sign in
-2. Create payments tables: incoming/outgoing/commission
-3. Create users: email, pass, login
-4. Create transactions: recipient, amount, commission
-4. Create endpoint to pay another user, validation
+[x] DB access
+[x] Real life sign in using DB
+[ ] Incoming payment class
+[ ] Outgoing payment class
+[ ] Transfer payment class
+[ ] User balance method
+[ ] Internal incoming/outgoing payment method
+[ ] External (any user can) transfer endpoint which checks balance and create
+    instance
+[ ] Reports endpoint
+[ ] Sample JS/react application
 
-## create db
+## Notes
 
-CREATE DATABASE crystal_api_payments WITH OWNER owner;
+1. Create DB
 
+`CREATE DATABASE crystal_api_payments WITH OWNER owner;`
 
-## Installation
+## Purpose
 
-
-TODO: Write installation instructions here
-
-
-## Usage
-
-
-
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
+Create proof that it is possible to create very fast API in Crystal language. 
 
 ## Contributing
 
