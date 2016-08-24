@@ -9,7 +9,8 @@ TODO
 - [ ] Transfer payment class
 - [x] User balance method
 - [ ] Internal incoming/outgoing payment method
-- [ ] External (any user can) transfer endpoint which checks   balance and create instance
+- [x] External (any user can) transfer endpoint
+- [ ] Transfer endpoint validations (which checks balance, users, ...)
 - [ ] Reports endpoint
 - [ ] Sample JS/react application
 

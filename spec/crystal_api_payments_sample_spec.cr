@@ -34,7 +34,8 @@ describe CrystalApiPaymentsSample do
       puts "User already available"
       puts collection.inspect
     end
-    user1_id = collection[0].id
+    user1 = collection[0]
+    user1_id = user1.id
 
     # create user 2
     h = {"email" => sample_user2_email}
@@ -58,7 +59,8 @@ describe CrystalApiPaymentsSample do
       puts "User already available"
       puts collection.inspect
     end
-    user2_id = collection[0].id
+    user2 = collection[0]
+    user2_id = user2.id
 
 
     # create initial payments
@@ -124,9 +126,30 @@ describe CrystalApiPaymentsSample do
     # get user balance
     http = HTTP::Client.new("localhost", Kemal.config.port)
     result = http.exec("GET", "/balance", headers)
-    puts result.body
+    old_balance = result.body.to_s.to_i
+    old_balance.should eq user1.balance
 
-    # json = JSON.parse(result.body)
+    # create transfer
+    json_headers = HTTP::Headers.new
+    json_headers["X-Token"] = token
+    json_headers["Content-Type"] = "application/json"
+    json_headers["Accept"] = "application/json"
+
+    transfer_amount = 10
+    http = HTTP::Client.new("localhost", Kemal.config.port)
+    params = {"destination_user_id" => user2_id, "amount" => transfer_amount}
+    result = http.exec("POST", "/transfer", json_headers, params.to_json)
+    json = JSON.parse(result.body)
+
     # puts json.inspect
+
+    # get new user balance
+    http = HTTP::Client.new("localhost", Kemal.config.port)
+    result = http.exec("GET", "/balance", headers)
+    new_balance = result.body.to_s.to_i
+    new_balance.should eq user1.balance
+    new_balance.should eq (old_balance - transfer_amount)
+
+
   end
 end
