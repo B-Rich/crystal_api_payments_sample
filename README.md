@@ -4,15 +4,18 @@ TODO
 
 - [x] DB access
 - [x] Real life sign in using DB
-- [ ] Incoming payment class
-- [ ] Outgoing payment class
-- [ ] Transfer payment class
+- [x] Incoming payment class
+- [x] Outgoing payment class
+- [x] Transfer payment class
 - [x] User balance method
 - [ ] Internal incoming/outgoing payment method
 - [x] External (any user can) transfer endpoint
 - [ ] Transfer endpoint validations (which checks balance, users, ...)
-- [ ] Reports endpoint
+- [x] Incoming, outgoing, transfers list
+- [ ] Advanced reports endpoint
 - [ ] Sample JS/react application
+- [ ] created_at not rendering in json
+- [ ] Think about adding model class methods, maybe in additional macro
 
 ## Notes
 
