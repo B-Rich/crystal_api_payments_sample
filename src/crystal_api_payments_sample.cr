@@ -6,8 +6,8 @@ end
 
 # TODO hack
 struct Time
-  def to_json(a)
-    to_json
+  def to_json(io : IO)
+    io << self.to_json
   end
 end
 
@@ -47,9 +47,30 @@ get "/balance" do |env|
     resources = crystal_resource_convert_user(result)
     resources[0].balance
   else
-    nil
+    nil.to_json
   end
 end
+
+get "/payments/:type" do |env|
+  t = env.params.url["type"].to_s
+  puts t
+  if t == "" || Payment::TYPES.includes?(t) == false
+    nil.to_json
+  else
+
+    cu = env.current_user
+    if cu["id"]?
+      h = {"user_id" => cu["id"], "payment_type" => t}
+      result = env.crystal_service.get_filtered_objects("payments", h)
+      resources = crystal_resource_convert_payment(result)
+      resources.to_json
+    else
+      nil.to_json
+    end
+
+  end
+end
+
 
 post "/transfer" do |env|
   cu = env.current_user
@@ -72,7 +93,7 @@ post "/transfer" do |env|
       "user_id"           => user.id,
       "destination_user_id" => destination_user.id,
       "amount"          => amount,
-      # "created_at" => Time.now,
+      "created_at" => Time.now,
       "payment_type" => Payment::TYPE_TRANSFER
     }
 
@@ -80,6 +101,6 @@ post "/transfer" do |env|
     resources = crystal_resource_convert_payment(result)
     resources[0].to_json
   else
-    nil
+    nil.to_json
   end
 end

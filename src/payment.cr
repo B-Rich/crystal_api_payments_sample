@@ -16,4 +16,10 @@ struct Payment
   TYPE_INCOMING = "incoming"
   TYPE_OUTGOING = "outgoing"
   TYPE_TRANSFER = "transfer"
+
+  TYPES = [
+    TYPE_INCOMING,
+    TYPE_OUTGOING,
+    TYPE_TRANSFER
+  ]
 end

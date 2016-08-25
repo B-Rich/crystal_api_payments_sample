@@ -67,7 +67,8 @@ describe CrystalApiPaymentsSample do
     h = {
       "user_id"           => user1_id,
       "amount"          => 1000,
-      "payment_type" => Payment::TYPE_INCOMING
+      "payment_type" => Payment::TYPE_INCOMING,
+      "created_at" => Time.now,
     }
     result = service.insert_object("payments", h)
 
@@ -75,14 +76,16 @@ describe CrystalApiPaymentsSample do
       "user_id"           => user1_id,
       "destination_user_id" => user2_id,
       "amount"          => 500,
-      "payment_type" => Payment::TYPE_TRANSFER
+      "payment_type" => Payment::TYPE_TRANSFER,
+      "created_at" => Time.now,
     }
     result = service.insert_object("payments", h)
 
     h = {
       "user_id"           => user2_id,
       "amount"          => 200,
-      "payment_type" => Payment::TYPE_OUTGOING
+      "payment_type" => Payment::TYPE_OUTGOING,
+      "created_at" => Time.now,
     }
     result = service.insert_object("payments", h)
 
@@ -144,11 +147,20 @@ describe CrystalApiPaymentsSample do
     # puts json.inspect
 
     # get new user balance
-    http = HTTP::Client.new("localhost", Kemal.config.port)
     result = http.exec("GET", "/balance", headers)
     new_balance = result.body.to_s.to_i
     new_balance.should eq user1.balance
     new_balance.should eq (old_balance - transfer_amount)
+
+    # get list of incoming payments
+    result = http.exec("GET", "/payments/incoming", headers)
+    json = JSON.parse(result.body)
+    # puts json.inspect
+
+    # get list of incoming payments
+    result = http.exec("GET", "/payments/transfer", headers)
+    json = JSON.parse(result.body)
+    puts json.inspect
 
 
   end
